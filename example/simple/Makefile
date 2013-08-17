@@ -6,7 +6,8 @@
 NAME = simple
 
 SRC = \
-      main.c
+      main.c \
+      ../utils.c
 
 OBJ = $(SRC:.c=.o)
 

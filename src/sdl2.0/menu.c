@@ -5,8 +5,10 @@
 
 #include <menu.h>
 
-menu_error_e menu_init(menu_t *m) {
+menu_error_e menu_init(menu_t *m, u32 x, u32 y) {
 	(void)m;
+	(void)x;
+	(void)y;
 
 	return MENU_ERR_NONE;
 }

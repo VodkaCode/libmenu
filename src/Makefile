@@ -8,9 +8,14 @@ NAME = menu
 LIB_IMPLEMENTATION = sdl2.0
 
 SRC = \
-      menu.c
+      error.c
 
-OBJ = $(addprefix $(LIB_IMPLEMENTATION)/,$(SRC:.c=.o))
+IMPL_SRC = \
+	   menu.c \
+	   vertical.c \
+	   button.c
+
+OBJ = $(addprefix $(LIB_IMPLEMENTATION)/,$(IMPL_SRC:.c=.o)) $(SRC:.c=.o)
 
 CC = gcc
 CFLAGS = -I$(PWD) -Wall -Wextra $(sdl-config --cflags)
@@ -28,3 +33,5 @@ clean:
 
 distclean: clean
 	rm -f libmenu.a libmenu.so
+
+re: distclean all
