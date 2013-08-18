@@ -8,6 +8,7 @@
 #include "type.h"
 #include "error.h"
 #include "node.h"
+#include "font.h"
 
 typedef struct menu_s {
 	// X coordinate of the menu on the renderer
@@ -19,6 +20,11 @@ typedef struct menu_s {
 	u32 nb_nodes;
 	// "Pool" of nodes
 	menu_node_t *nodes;
+	// Number of nodes pre-allocated in the pool
+	u64 sz_nodes;
+
+	// Private implementation-dependant data
+	void *data;
 } menu_t;
 
 menu_error_e menu_init(menu_t*, u32, u32);

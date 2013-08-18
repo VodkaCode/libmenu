@@ -13,7 +13,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = gcc
 CFLAGS = -Wall -Wextra -I $(PWD)/../../src
-LDFLAGS = $(sdl-config --libs) -L $(PWD)/../../src -lmenu
+LDFLAGS = -L $(PWD)/../../src -lmenu $(shell sdl2-config --libs) -lSDL_ttf
 
 all: $(NAME)
 

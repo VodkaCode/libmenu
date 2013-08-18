@@ -12,13 +12,15 @@ SRC = \
 
 IMPL_SRC = \
 	   menu.c \
+	   font.c \
 	   vertical.c \
+	   node.c \
 	   button.c
 
 OBJ = $(addprefix $(LIB_IMPLEMENTATION)/,$(IMPL_SRC:.c=.o)) $(SRC:.c=.o)
 
 CC = gcc
-CFLAGS = -I$(PWD) -Wall -Wextra $(sdl-config --cflags)
+CFLAGS = -I$(PWD) -Wall -Wextra $(shell sdl2-config --cflags)
 
 all: static
 

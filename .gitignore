@@ -2,3 +2,5 @@
 *.o
 *.a
 *.so
+
+example/simple/simple

@@ -13,6 +13,9 @@ static struct {
 	char const *str;
 } const err_ref[] = {
 	{MENU_ERR_NONE, "no error"},
+	{MENU_ERR_INVALID_PARAMETER, "invalid parameter"},
+	{MENU_ERR_ALLOCATION_FAILURE, "allocation failure"},
+	{MENU_ERR_INTERNAL_FAILURE, "internal failure"},
 };
 
 char const *menu_error_to_str(menu_error_e err) {
