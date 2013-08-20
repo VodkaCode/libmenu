@@ -15,7 +15,7 @@
 #define SIMPLE_MENU_X 10
 #define SIMPLE_MENU_Y 5
 
-#define FONT_PATH ""
+#define FONT_PATH "../data/GeosansLight.ttf"
 #define FONT_SIZE 12
 
 int main(void) {
@@ -41,30 +41,31 @@ int main(void) {
 	if (TTF_Init() < 0)
 		fatal("Unable to init SDL_TTF: %s", TTF_GetError());
 
-	screen = SDL_CreateWindow("Example #1: simple",
-				  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-				  SCREEN_W, SCREEN_H,
-				  SDL_WINDOW_BORDERLESS);
-	if (!screen)
-		fatal("Unable to create window: %s", SDL_GetError());
-
-	renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_ACCELERATED);
-	if (!renderer)
-		fatal("Unable to create renderer: %s", SDL_GetError());
+	if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H,
+					SDL_WINDOW_BORDERLESS,
+					&screen, &renderer) < 0)
+		fatal("Unable to create window/renderer: %s", SDL_GetError());
 
 	// The fun starts here
-	err = menu_vertical_init(&simple_menu, SIMPLE_MENU_X, SIMPLE_MENU_Y);
+
+	// Create a new menu with a vertical layout
+	err = menu_vertical_init(&simple_menu, SIMPLE_MENU_X, SIMPLE_MENU_Y, renderer);
 	if (err != MENU_ERR_NONE)
 		fatal("Unable to init menu: %s", menu_error_to_str(err));
 
+	// Load the font that will be used in our menus
 	err = menu_font_init(&simple_menu_font, FONT_PATH, FONT_SIZE);
 	if (err != MENU_ERR_NONE)
 		fatal("Unable to init font: %s", menu_error_to_str(err));
 
-	err = menu_button_init(&quit_button, &quit_label, 20, 10);
+	// Create a button 20x10 pixels wide
+	// The label contains the text that will be rendered,
+	// a color code, and a pointer to the font used
+	err = menu_button_init(&quit_button, &quit_label, 20, 10, renderer);
 	if (err != MENU_ERR_NONE)
 		fatal("Unable to init button: %s", menu_error_to_str(err));
 
+	// Assign the button previously initialized to the main menu
 	err = menu_add_node((menu_t*)&simple_menu, (menu_node_t*)&quit_button);
 	if (err != MENU_ERR_NONE)
 		fatal("Unable to add button: %s", menu_error_to_str(err));
@@ -88,7 +89,7 @@ int main(void) {
 
 		// Display background
 		// Display the menu
-		simple_menu.render(&simple_menu, renderer);
+		simple_menu.render(&simple_menu);
 
 		SDL_RenderPresent(renderer);
 	}

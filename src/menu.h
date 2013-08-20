@@ -7,8 +7,10 @@
 
 #include "type.h"
 #include "error.h"
-#include "node.h"
 #include "font.h"
+
+struct menu_node_s;
+typedef struct menu_node_s menu_node_t;
 
 typedef struct menu_s {
 	// X coordinate of the menu on the renderer
@@ -27,7 +29,7 @@ typedef struct menu_s {
 	void *data;
 } menu_t;
 
-menu_error_e menu_init(menu_t*, u32, u32);
+menu_error_e menu_init(menu_t*, u32, u32, void*);
 menu_error_e menu_free(menu_t*);
 
 menu_error_e menu_add_node(menu_t*, menu_node_t const*);

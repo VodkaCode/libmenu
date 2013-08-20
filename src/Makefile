@@ -7,10 +7,10 @@ NAME = menu
 
 LIB_IMPLEMENTATION = sdl2.0
 
-SRC = \
-      error.c
+SRC =
 
 IMPL_SRC = \
+	   error.c \
 	   menu.c \
 	   font.c \
 	   vertical.c \
