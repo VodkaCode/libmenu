@@ -21,7 +21,7 @@ static menu_error_e vertical_renderer(menu_vertical_t *m) {
 		if (!m->menu.nodes[i].parent_menu)
 			continue;
 
-		((m->menu).nodes[i]).render(&(m->menu).nodes[i], m->menu.x, (m->menu.y * i) + 12);// FIXME: hardcoded 12
+		m->menu.nodes[i].render(&m->menu.nodes[i], m->menu.x, (m->menu.y * i) + 12);// FIXME: hardcoded 12
 	}
 
 	return MENU_ERR_NONE;

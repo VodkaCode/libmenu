@@ -14,6 +14,7 @@ static menu_error_e button_renderer(menu_node_t *n, u32 x, u32 y) {
 	menu_button_t *b;
 	SDL_Renderer *renderer;
 	SDL_Texture *texture;
+	SDL_Rect dst;
 
 	// TODO: display a background
 
@@ -31,7 +32,13 @@ static menu_error_e button_renderer(menu_node_t *n, u32 x, u32 y) {
 	renderer = b->node.parent_menu->data;
 	texture = b->node.data;
 
-	if (SDL_RenderCopy(renderer, texture, NULL, NULL) < 0)
+	dst.x = (int)x;
+	dst.y = (int)y;
+
+	if (SDL_QueryTexture(texture, NULL, NULL, &dst.w, &dst.h) < 0)
+		return MENU_ERR_INTERNAL_FAILURE;
+
+	if (SDL_RenderCopy(renderer, texture, NULL, &dst) < 0)
 		return MENU_ERR_INTERNAL_FAILURE;
 
 	return MENU_ERR_NONE;

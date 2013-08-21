@@ -76,8 +76,11 @@ menu_error_e menu_add_node(menu_t *m, menu_node_t const *n) {
 	}
 
 	// Copy the given node to the internal pool slot
+	// FIXME: memset if more fields need be copied
 	holder_node->w = n->w;
 	holder_node->h = n->h;
+	holder_node->data = n->data;
+	holder_node->render = n->render;
 
 	// Assign the node to the menu
 	holder_node->parent_menu = m;

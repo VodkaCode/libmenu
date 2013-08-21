@@ -16,7 +16,7 @@
 #define SIMPLE_MENU_Y 5
 
 #define FONT_PATH "../data/GeosansLight.ttf"
-#define FONT_SIZE 12
+#define FONT_SIZE 20
 
 int main(void) {
 	SDL_Window *screen;
