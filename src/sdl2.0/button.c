@@ -48,10 +48,9 @@ static menu_error_e button_create_label_surface(menu_button_t *b) {
 	SDL_Surface *s;
 	SDL_Texture *t;
 	SDL_Renderer *r;
-	// FIXME: incorrect masks, use SDL_GetRGB
 	SDL_Color const col = {
-		.r = b->label.color & 0xFF0000,
-		.g = b->label.color & 0x00FF00,
+		.r = (b->label.color & 0xFF0000) >> 16,
+		.g = (b->label.color & 0x00FF00) >> 8,
 		.b = b->label.color & 0x0000FF,
 	};
 
