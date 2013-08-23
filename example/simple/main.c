@@ -3,6 +3,7 @@
  * by lenormf
  */
 
+#include <string.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <vertical.h>
@@ -12,27 +13,79 @@
 #define SCREEN_W 800
 #define SCREEN_H 600
 
-#define SIMPLE_MENU_X 10
-#define SIMPLE_MENU_Y 5
+#define vmenu_X 10
+#define vmenu_Y 5
 
 #define FONT_PATH "../data/GeosansLight.ttf"
 #define FONT_SIZE 20
+
+typedef struct my_menu_s {
+	menu_vertical_t vmenu;
+	menu_font_t vmenu_font;
+
+	menu_button_t play_button;
+	menu_label_t play_label;
+
+	menu_button_t quit_button;
+	menu_label_t quit_label;
+} my_menu_t;
+
+void my_menu_init(my_menu_t *m, SDL_Renderer *renderer) {
+	menu_error_e err;
+
+	// Initialize labels
+	strncpy(m->quit_label.name, "Quit", sizeof(m->quit_label.name));
+	m->quit_label.color = 0xEAEAEA;
+	m->quit_label.font = &m->vmenu_font;
+
+	strncpy(m->play_label.name, "Play", sizeof(m->play_label.name));
+	m->play_label.color = 0xEA00EA;
+	m->play_label.font = &m->vmenu_font;
+
+	// Load the font that will be used in our menus
+	err = menu_font_init(&m->vmenu_font, FONT_PATH, FONT_SIZE);
+	if (err != MENU_ERR_NONE)
+		fatal("Unable to init font: %s", menu_error_to_str(err));
+
+	// Create a new menu with a vertical layout
+	err = menu_vertical_init(&m->vmenu, vmenu_X, vmenu_Y, renderer);
+	if (err != MENU_ERR_NONE)
+		fatal("Unable to init menu: %s", menu_error_to_str(err));
+
+	// Space between the nodes of the menu
+	// By default, the vertical menu will place the nodes between one another
+	menu_vertical_set(MENU_VERTICAL_VAR_VSPACING, FONT_SIZE);
+
+	// Create a button 20x10 pixels wide
+	// The label contains the text that will be rendered,
+	// a color code, and a pointer to the font used
+	err = menu_button_init(&m->quit_button, &m->quit_label, 20, 10, renderer);
+	if (err != MENU_ERR_NONE)
+		fatal("Unable to init button: %s", menu_error_to_str(err));
+
+	err = menu_button_init(&m->play_button, &m->play_label, 20, 10, renderer);
+	if (err != MENU_ERR_NONE)
+		fatal("Unable to init button: %s", menu_error_to_str(err));
+
+	// Assign the buttons previously initialized to the main menu
+	err = menu_add_node((menu_t*)&m->vmenu, (menu_node_t*)&m->quit_button);
+	if (err != MENU_ERR_NONE)
+		fatal("Unable to add button: %s", menu_error_to_str(err));
+
+	err = menu_add_node((menu_t*)&m->vmenu, (menu_node_t*)&m->play_button);
+	if (err != MENU_ERR_NONE)
+		fatal("Unable to add button: %s", menu_error_to_str(err));
+}
+
+void my_menu_free(my_menu_t *m) {
+	menu_vertical_free(&m->vmenu);
+}
 
 int main(void) {
 	SDL_Window *screen;
 	SDL_Renderer *renderer;
 
-	menu_error_e err;
-
-	menu_vertical_t simple_menu;
-	menu_font_t simple_menu_font;
-
-	menu_button_t quit_button;
-	menu_label_t const quit_label = {
-		.name = "Quit",
-		.color = 0xEAEAEA,
-		.font = &simple_menu_font,
-	};
+	my_menu_t my_menu;
 
 	// Several initialization calls (SDL, SDL_TTF)
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -47,33 +100,12 @@ int main(void) {
 		fatal("Unable to create window/renderer: %s", SDL_GetError());
 
 	// The fun starts here
-
-	// Create a new menu with a vertical layout
-	err = menu_vertical_init(&simple_menu, SIMPLE_MENU_X, SIMPLE_MENU_Y, renderer);
-	if (err != MENU_ERR_NONE)
-		fatal("Unable to init menu: %s", menu_error_to_str(err));
-
-	// Load the font that will be used in our menus
-	err = menu_font_init(&simple_menu_font, FONT_PATH, FONT_SIZE);
-	if (err != MENU_ERR_NONE)
-		fatal("Unable to init font: %s", menu_error_to_str(err));
-
-	// Create a button 20x10 pixels wide
-	// The label contains the text that will be rendered,
-	// a color code, and a pointer to the font used
-	err = menu_button_init(&quit_button, &quit_label, 20, 10, renderer);
-	if (err != MENU_ERR_NONE)
-		fatal("Unable to init button: %s", menu_error_to_str(err));
-
-	// Assign the button previously initialized to the main menu
-	err = menu_add_node((menu_t*)&simple_menu, (menu_node_t*)&quit_button);
-	if (err != MENU_ERR_NONE)
-		fatal("Unable to add button: %s", menu_error_to_str(err));
+	my_menu_init(&my_menu, renderer);
 
 	u1 quit = 0;
 	while (!quit) {
 		// Handle input
-		//simple_menu.handle_input(&simple_menu);
+		//my_menu.vmenu.handle_input(&vmenu);
 
 		SDL_Event ev;
 		while (SDL_PollEvent(&ev)) {
@@ -89,12 +121,12 @@ int main(void) {
 
 		// Display background
 		// Display the menu
-		simple_menu.render(&simple_menu);
+		my_menu.vmenu.render(&my_menu.vmenu);
 
 		SDL_RenderPresent(renderer);
 	}
 
-	menu_vertical_free(&simple_menu);
+	my_menu_free(&my_menu);
 
 	TTF_Quit();
 	SDL_Quit();
