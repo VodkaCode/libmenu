@@ -19,6 +19,10 @@
 #define FONT_PATH "../data/GeosansLight.ttf"
 #define FONT_SIZE 20
 
+// Abstraction of a vertical menu
+// For more transparency, it's possible to forward calls from
+// my_menu.{render,handle_input} to my_menu.vmenu.{render,handle_input}
+// with a macro or function pointers
 typedef struct my_menu_s {
 	menu_vertical_t vmenu;
 	menu_font_t vmenu_font;
@@ -35,11 +39,12 @@ void my_menu_init(my_menu_t *m, SDL_Renderer *renderer) {
 
 	// Initialize labels
 	strncpy(m->quit_label.name, "Quit", sizeof(m->quit_label.name));
+	// Color code format: 0xRRGGBB
 	m->quit_label.color = 0xEAEAEA;
 	m->quit_label.font = &m->vmenu_font;
 
 	strncpy(m->play_label.name, "Play", sizeof(m->play_label.name));
-	m->play_label.color = 0xEA00EA;
+	m->play_label.color = 0xEAEAEA;
 	m->play_label.font = &m->vmenu_font;
 
 	// Load the font that will be used in our menus
@@ -68,11 +73,12 @@ void my_menu_init(my_menu_t *m, SDL_Renderer *renderer) {
 		fatal("Unable to init button: %s", menu_error_to_str(err));
 
 	// Assign the buttons previously initialized to the main menu
-	err = menu_add_node((menu_t*)&m->vmenu, (menu_node_t*)&m->quit_button);
+	// The nodes will be rendered in the order they were assigned to the menu
+	err = menu_add_node((menu_t*)&m->vmenu, (menu_node_t*)&m->play_button);
 	if (err != MENU_ERR_NONE)
 		fatal("Unable to add button: %s", menu_error_to_str(err));
 
-	err = menu_add_node((menu_t*)&m->vmenu, (menu_node_t*)&m->play_button);
+	err = menu_add_node((menu_t*)&m->vmenu, (menu_node_t*)&m->quit_button);
 	if (err != MENU_ERR_NONE)
 		fatal("Unable to add button: %s", menu_error_to_str(err));
 }
@@ -105,7 +111,7 @@ int main(void) {
 	u1 quit = 0;
 	while (!quit) {
 		// Handle input
-		//my_menu.vmenu.handle_input(&vmenu);
+		//my_menu.vmenu.handle_input(&my_menu.vmenu);
 
 		SDL_Event ev;
 		while (SDL_PollEvent(&ev)) {
