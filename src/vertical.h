@@ -19,7 +19,7 @@ typedef struct menu_vertical_s {
 	int vertical_spacing;
 
 	menu_error_e (*render)(struct menu_vertical_s*);
-	void (*handle_input)(struct menu_vertical_s*);
+	menu_error_e (*handle_input)(struct menu_vertical_s*);
 } menu_vertical_t;
 
 menu_error_e menu_vertical_init(menu_vertical_t*, u32, u32, void*);

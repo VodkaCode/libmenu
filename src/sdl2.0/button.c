@@ -16,8 +16,6 @@ static menu_error_e button_renderer(menu_node_t *n, u32 x, u32 y) {
 	SDL_Texture *texture;
 	SDL_Rect dst;
 
-	// TODO: display a background
-
 	if (!n
 	    || !x
 	    || !y)
@@ -78,7 +76,7 @@ menu_error_e menu_button_init(menu_button_t *b, menu_label_t const *lbl, u32 w, 
 	    || !lbl)
 		return MENU_ERR_INVALID_PARAMETER;
 
-	err = menu_node_init(&b->node, w, h, d, (node_renderer_t)&button_renderer);
+	err = menu_node_init(&b->node, 0, 0, w, h, d, (node_renderer_t)&button_renderer);
 	if (err != MENU_ERR_NONE)
 		return err;
 

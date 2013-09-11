@@ -7,6 +7,7 @@
 
 #include "type.h"
 #include "error.h"
+#include "event.h"
 
 struct menu_s;
 typedef struct menu_s menu_t;
@@ -17,6 +18,10 @@ typedef struct menu_node_s menu_node_t;
 typedef menu_error_e (*node_renderer_t)(menu_node_t*, u32, u32);
 
 typedef struct menu_node_s {
+	// X coordinate of the node
+	u32 x;
+	// Y coordinate of the node
+	u32 y;
 	// Width of the node
 	u32 w;
 	// Height of the node
@@ -35,5 +40,5 @@ typedef struct menu_node_s {
 	node_renderer_t render;
 } menu_node_t;
 
-menu_error_e menu_node_init(menu_node_t*, u32, u32, void*, node_renderer_t);
+menu_error_e menu_node_init(menu_node_t*, u32, u32, u32, u32, void*, node_renderer_t);
 menu_error_e menu_node_free(menu_node_t*);
